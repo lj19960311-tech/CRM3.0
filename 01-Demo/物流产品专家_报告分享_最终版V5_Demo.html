@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>物流产品专家 · 报告分享 Demo</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --purple: #6d5ef0;
+      --purple-dark: #5848dc;
+      --purple-light: #f1efff;
+      --text: #24242a;
+      --muted: #7c7c86;
+      --line: #e9e9ee;
+      --bg: #f5f5f8;
+    }
+    body { margin: 0; font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--text); background: var(--bg); }
+    button { font: inherit; }
+    .app { display: flex; min-height: 100vh; }
+    .sidebar { width: 226px; background: #fff; border-right: 1px solid var(--line); padding: 22px 14px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 750; padding: 0 10px 22px; }
+    .brand-mark { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; color: #fff; background: linear-gradient(135deg, #7568f5, #a696ff); }
+    .nav { padding: 10px 12px; margin-bottom: 5px; border-radius: 9px; color: #62626c; font-size: 14px; }
+    .nav.active { color: var(--purple); background: var(--purple-light); font-weight: 650; }
+    .main { flex: 1; min-width: 0; padding: 22px; }
+    .crumb { color: #868691; font-size: 13px; margin-bottom: 14px; }
+    .report { background: #fff; border: 1px solid var(--line); border-radius: 16px; min-height: calc(100vh - 72px); overflow: hidden; box-shadow: 0 8px 30px rgba(30, 28, 60, .05); }
+    .report-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 22px; border-bottom: 1px solid var(--line); }
+    .title-wrap { min-width: 0; }
+    .report-title { margin: 0; font-size: 18px; font-weight: 750; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .report-meta { color: var(--muted); font-size: 12px; margin-top: 5px; }
+    .actions { display: flex; align-items: center; gap: 8px; flex: none; }
+    .btn, .icon-btn { border: 1px solid #d9d6f3; background: #fff; color: #574bc5; border-radius: 8px; height: 34px; cursor: pointer; transition: .16s ease; }
+    .btn { display: inline-flex; align-items: center; gap: 7px; padding: 0 12px; }
+    .icon-btn { display: grid; place-items: center; width: 34px; padding: 0; }
+    .btn:hover, .icon-btn:hover { background: var(--purple-light); border-color: #bfb8f2; }
+    .close-btn { border-color: transparent; color: #74747e; }
+    .report-body { padding: 28px; max-width: 1040px; margin: 0 auto; }
+    .hero { padding: 30px; border-radius: 16px; color: #fff; background: linear-gradient(135deg, #5144ca, #8375f4); }
+    .hero small { opacity: .8; letter-spacing: 1px; }
+    .hero h2 { font-size: 28px; margin: 11px 0 8px; }
+    .hero p { margin: 0; opacity: .86; line-height: 1.7; }
+    .section-title { margin: 28px 0 14px; font-size: 17px; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .card { border: 1px solid var(--line); border-radius: 12px; padding: 17px; }
+    .card b { display: block; margin-bottom: 7px; }
+    .card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .stat { padding: 16px; border-radius: 12px; background: #faf9ff; border: 1px solid #ebe8ff; }
+    .stat strong { display: block; font-size: 22px; color: var(--purple-dark); }
+    .stat span { color: var(--muted); font-size: 12px; }
+
+    .mask { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(22, 20, 34, .44); z-index: 20; }
+    .mask.show { display: flex; }
+    .modal { width: 600px; max-width: 100%; max-height: calc(100vh - 40px); overflow: auto; background: #fff; border-radius: 16px; box-shadow: 0 22px 70px rgba(18, 14, 60, .22); }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--line); }
+    .modal-head h3 { margin: 0; font-size: 18px; }
+    .modal-body { padding: 20px; }
+    .info { display: grid; grid-template-columns: 92px 1fr; gap: 11px 16px; padding: 15px; border-radius: 10px; background: #fafafa; font-size: 13px; }
+    .label { color: var(--muted); }
+    .period-title { margin: 20px 0 10px; font-size: 14px; font-weight: 700; }
+    .periods { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .period { border: 1px solid var(--line); border-radius: 10px; padding: 13px; cursor: pointer; background: #fff; text-align: left; }
+    .period.active { border-color: var(--purple); box-shadow: 0 0 0 2px rgba(109, 94, 240, .1); background: #fbfaff; }
+    .period:disabled { cursor: default; opacity: .82; }
+    .period b { display: block; margin-bottom: 4px; }
+    .period span { color: var(--muted); font-size: 12px; }
+    .primary { width: 100%; height: 40px; margin-top: 18px; border: 0; border-radius: 9px; color: #fff; background: var(--purple); cursor: pointer; font-weight: 650; }
+    .primary:hover { background: var(--purple-dark); }
+    .share-result { display: none; margin-top: 18px; }
+    .share-result.show { display: block; }
+    .result-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .link-panel { display: flex; flex-direction: column; gap: 10px; }
+    .link-row { display: flex; align-items: stretch; gap: 8px; }
+    .link-box { padding: 12px; border: 1px solid var(--line); border-radius: 9px; background: #fafafa; color: #555562; font-size: 12px; line-height: 1.55; word-break: break-all; }
+    .link-row .link-box { flex: 1; min-width: 0; }
+    .copy-inline { flex: none; min-width: 64px; padding: 0 14px; border: 1px solid #d9d6f3; border-radius: 9px; background: #fff; color: var(--purple-dark); cursor: pointer; font-weight: 650; }
+    .copy-inline:hover { background: var(--purple-light); }
+    .copy-inline:disabled { color: #aaa8b5; border-color: #e4e3e8; background: #f7f7f9; cursor: not-allowed; }
+    .valid-tip { color: #777783; font-size: 12px; }
+    .secondary { height: 38px; border: 1px solid #d9d6f3; border-radius: 9px; background: #fff; color: var(--purple-dark); cursor: pointer; font-weight: 650; }
+    .secondary:hover { background: var(--purple-light); }
+    .secondary:disabled { color: #aaa8b5; border-color: #e4e3e8; background: #f7f7f9; cursor: not-allowed; }
+    .qr-card { display: grid; place-items: center; align-content: center; gap: 10px; padding: 4px 10px 0; }
+    #qr { width: 144px; height: 144px; background: #fff; }
+    .qr-tip { color: var(--muted); font-size: 11px; }
+    .toast { position: fixed; left: 50%; bottom: 36px; transform: translateX(-50%) translateY(10px); padding: 10px 16px; border-radius: 9px; background: #24242a; color: #fff; font-size: 13px; opacity: 0; pointer-events: none; transition: .2s; z-index: 40; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 820px) {
+      .sidebar { display: none; }
+      .main { padding: 10px; }
+      .report { min-height: calc(100vh - 20px); }
+      .report-head { padding: 14px; }
+      .email-text { display: none; }
+      .btn { width: 34px; padding: 0; justify-content: center; }
+      .report-body { padding: 16px; }
+      .cards, .stat-row { grid-template-columns: 1fr 1fr; }
+      .result-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      .report-title { font-size: 15px; }
+      .cards, .stat-row { grid-template-columns: 1fr; }
+      .hero { padding: 22px; }
+      .hero h2 { font-size: 22px; }
+      .modal { align-self: flex-end; border-radius: 16px 16px 0 0; }
+      .mask { padding: 0; }
+      .periods { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">万</span>物流产品专家</div>
+      <div class="nav active">新对话</div>
+      <div class="nav">我的产出</div>
+      <div class="nav">收藏内容</div>
+      <div class="nav">历史记录</div>
+    </aside>
+
+    <main class="main">
+      <div class="crumb">物流产品专家 / AI 生成报告</div>
+      <section class="report">
+        <header class="report-head">
+          <div class="title-wrap">
+            <h1 class="report-title">鞍山钢铁 · 物流综合解决方案</h1>
+            <div class="report-meta">AI 生成报告 · 刚刚生成</div>
+          </div>
+          <div class="actions">
+            <button class="btn" aria-label="发送到邮箱" title="发送到邮箱">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+              <span class="email-text">发送到邮箱</span>
+            </button>
+            <button id="shareBtn" class="icon-btn" aria-label="分享报告" title="分享报告">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/></svg>
+            </button>
+            <button class="icon-btn close-btn" aria-label="关闭" title="关闭">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <div class="report-body">
+          <div class="hero">
+            <small>LOGISTICS SOLUTION</small>
+            <h2>鞍山钢铁物流综合解决方案</h2>
+            <p>围绕原燃料入厂、成品出厂与多式联运场景，构建全链路数字化物流服务方案。</p>
+          </div>
+          <h3 class="section-title">核心方案</h3>
+          <div class="cards">
+            <div class="card"><b>易达宝</b><p>统一订单、运力与结算流程，提高全链路协同效率。</p></div>
+            <div class="card"><b>多式联运</b><p>优化公铁水组合，降低干线运输成本与旺季保供风险。</p></div>
+            <div class="card"><b>车辆管理</b><p>实现车辆、司机、在途状态与异常事件的集中管理。</p></div>
+          </div>
+          <h3 class="section-title">预期收益</h3>
+          <div class="stat-row">
+            <div class="stat"><strong>12%–18%</strong><span>综合物流成本优化</span></div>
+            <div class="stat"><strong>30%</strong><span>调度效率提升</span></div>
+            <div class="stat"><strong>95%+</strong><span>在途可视率</span></div>
+            <div class="stat"><strong>8个月</strong><span>预计回本周期</span></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="mask" class="mask" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" id="modal">
+      <div class="modal-head">
+        <h3 id="modalTitle">分享报告</h3>
+        <button id="modalClose" class="icon-btn close-btn" aria-label="关闭弹窗">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="info">
+          <span class="label">报告名称</span><strong>鞍山钢铁 · 物流综合解决方案</strong>
+          <span class="label">生成时间</span><span id="reportTime">2026-08-11 15:30</span>
+          <span class="label">有效期</span><span id="periodDisplay">尚未生成</span>
+        </div>
+
+        <div id="createArea">
+          <div class="period-title">选择链接有效期</div>
+          <div class="periods">
+            <button class="period active" data-period="forever"><b>永久有效</b><span>默认选项，不因时间自动失效</span></button>
+            <button class="period" data-period="7days"><b>7 天有效</b><span>从链接生成成功起计算 7×24 小时</span></button>
+          </div>
+          <button id="generateBtn" class="primary">生成分享链接</button>
+        </div>
+
+        <div id="shareResult" class="share-result">
+          <div class="result-grid">
+            <div class="link-panel">
+              <div class="label">分享链接</div>
+              <div class="link-row"><div id="linkBox" class="link-box"></div><button id="copyBtn" class="copy-inline" disabled>复制</button></div>
+              <div id="validTip" class="valid-tip"></div>
+            </div>
+            <div class="qr-card">
+              <svg id="qr" viewBox="0 0 168 168" xmlns="http://www.w3.org/2000/svg" aria-label="二维码示意"><rect width="168" height="168" fill="#f6f6f8"/><text x="84" y="79" text-anchor="middle" fill="#aaa8b5" font-size="12">二维码</text><text x="84" y="98" text-anchor="middle" fill="#aaa8b5" font-size="12">生成后展示</text></svg>
+              <div class="qr-tip">扫码查看报告</div>
+              <button id="downloadBtn" class="secondary" style="width:180px;display:inline-flex;align-items:center;justify-content:center;gap:7px" disabled><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>下载二维码</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const mask = document.getElementById('mask');
+    const modal = document.getElementById('modal');
+    const shareBtn = document.getElementById('shareBtn');
+    const modalClose = document.getElementById('modalClose');
+    const generateBtn = document.getElementById('generateBtn');
+    const shareResult = document.getElementById('shareResult');
+    const createArea = document.getElementById('createArea');
+    const periodDisplay = document.getElementById('periodDisplay');
+    const validTip = document.getElementById('validTip');
+    const linkBox = document.getElementById('linkBox');
+    const copyBtn = document.getElementById('copyBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const toast = document.getElementById('toast');
+    let selectedPeriod = 'forever';
+    let shareLink = '';
+
+    const pad = n => String(n).padStart(2, '0');
+    const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    document.getElementById('reportTime').textContent = fmt(new Date());
+
+    function showToast(text) {
+      toast.textContent = text;
+      toast.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove('show'), 1600);
+    }
+
+    function drawFinder(svg, x, y) {
+      const ns = 'http://www.w3.org/2000/svg';
+      [[0,0,49,49,'#111'],[7,7,35,35,'#fff'],[14,14,21,21,'#111']].forEach(v => {
+        const r = document.createElementNS(ns, 'rect');
+        r.setAttribute('x', x+v[0]); r.setAttribute('y', y+v[1]); r.setAttribute('width', v[2]); r.setAttribute('height', v[3]); r.setAttribute('fill', v[4]); svg.appendChild(r);
+      });
+    }
+
+    function drawQr(seed) {
+      const svg = document.getElementById('qr');
+      svg.innerHTML = '<rect width="168" height="168" fill="white"/>';
+      drawFinder(svg, 7, 7); drawFinder(svg, 112, 7); drawFinder(svg, 7, 112);
+      const ns = 'http://www.w3.org/2000/svg';
+      let n = 0;
+      for (const c of seed) n = (n * 31 + c.charCodeAt(0)) >>> 0;
+      for (let y = 0; y < 21; y++) for (let x = 0; x < 21; x++) {
+        const px=x*7+7, py=y*7+7;
+        const finder=(x<7&&y<7)||(x>14&&y<7)||(x<7&&y>14);
+        n=(1664525*n+1013904223)>>>0;
+        if (!finder && (n & 3) !== 0) {
+          const r=document.createElementNS(ns,'rect'); r.setAttribute('x',px); r.setAttribute('y',py); r.setAttribute('width',7); r.setAttribute('height',7); r.setAttribute('fill','#111'); svg.appendChild(r);
+        }
+      }
+    }
+
+    shareBtn.addEventListener('click', () => mask.classList.add('show'));
+    modalClose.addEventListener('click', () => mask.classList.remove('show'));
+    mask.addEventListener('click', e => { if (e.target === mask) mask.classList.remove('show'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') mask.classList.remove('show'); });
+
+    document.querySelectorAll('.period').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('.period').forEach(x => x.classList.remove('active'));
+      btn.classList.add('active');
+      selectedPeriod = btn.dataset.period;
+    }));
+
+    generateBtn.addEventListener('click', () => {
+      generateBtn.disabled = true;
+      generateBtn.textContent = '生成中…';
+      setTimeout(() => {
+        shareLink = 'https://demo.wanda.com/report/share/AS20260811X7K9';
+        linkBox.textContent = shareLink;
+        if (selectedPeriod === 'forever') {
+          periodDisplay.textContent = '永久有效';
+          validTip.textContent = '有效期：永久有效';
+        } else {
+          const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+          periodDisplay.textContent = `有效期至 ${fmt(expires)}`;
+          validTip.textContent = `有效期至：${fmt(expires)}`;
+        }
+        drawQr(shareLink);
+        document.querySelectorAll('.period').forEach(x => x.disabled = true);
+        createArea.style.display = 'none';
+        copyBtn.disabled = false;
+        downloadBtn.disabled = false;
+        shareResult.classList.add('show');
+        generateBtn.textContent = '生成分享链接';
+        generateBtn.disabled = false;
+        showToast('分享链接已生成');
+      }, 550);
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(shareLink); showToast('链接已复制'); }
+      catch { showToast('复制失败，请手动复制链接'); }
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      const svg = document.getElementById('qr');
+      const data = new XMLSerializer().serializeToString(svg);
+      const blob = new Blob([data], {type:'image/svg+xml;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = '鞍山钢铁_物流综合解决方案_二维码.svg'; a.click();
+      URL.revokeObjectURL(url);
+      showToast('二维码已下载');
+    });
+  </script>
+</body>
+</html>
