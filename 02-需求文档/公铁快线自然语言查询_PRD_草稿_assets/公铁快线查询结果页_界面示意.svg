@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">公铁快线自然语言查询结果页界面示意</title>
+  <desc id="desc">无查询表单。上方左侧为查询结果和创建线索按钮，右侧为路线地图；下方为页面内使用说明及适用箱型参数。</desc>
+  <defs>
+    <style>
+      text { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; fill: #26354b; }
+      .muted { fill: #75849a; }
+      .small { font-size: 13px; }
+      .body { font-size: 15px; }
+      .bold { font-weight: 600; }
+      .white { fill: #fff; }
+      .title { font-size: 21px; font-weight: 700; }
+      .section { font-size: 18px; font-weight: 700; }
+      .line { stroke: #e7ecf3; stroke-width: 1; }
+    </style>
+    <pattern id="grid" width="52" height="52" patternUnits="userSpaceOnUse">
+      <path d="M 52 0 L 0 0 0 52" fill="none" stroke="#e7edf0" stroke-width="1"/>
+    </pattern>
+    <clipPath id="mapClip"><rect x="538" y="84" width="878" height="536" rx="15"/></clipPath>
+  </defs>
+
+  <rect width="1440" height="900" fill="#f4f7fb"/>
+  <rect width="1440" height="58" fill="#fff"/>
+  <path d="M0 58H1440" class="line"/>
+  <rect x="24" y="15" width="28" height="28" rx="7" fill="#1769e8"/>
+  <path d="M31 23h14M31 29h10M31 35h13" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <text x="64" y="36" class="title">公铁快线查询</text>
+  <text x="1278" y="36" class="small muted">自然语言查询结果</text>
+
+  <!-- Result panel -->
+  <rect x="24" y="84" width="496" height="536" rx="15" fill="#fff" stroke="#e3eaf3"/>
+  <text x="48" y="121" class="section">查询结果</text>
+  <text x="48" y="143" class="small muted">根据本轮对话展示可用方案</text>
+  <path d="M48 160H496" class="line"/>
+
+  <rect x="48" y="180" width="448" height="340" rx="13" fill="#fff" stroke="#c9daf6" stroke-width="1.5"/>
+  <rect x="48" y="180" width="5" height="340" rx="2.5" fill="#1769e8"/>
+  <text x="70" y="211" class="small muted">方案示意</text>
+  <text x="70" y="242" font-size="19" font-weight="700">起点 → 终点</text>
+  <rect x="70" y="259" width="80" height="25" rx="12" fill="#eaf2ff"/>
+  <text x="110" y="276" text-anchor="middle" font-size="12" fill="#1769e8">40(77) 箱</text>
+  <text x="164" y="276" class="small muted">箱型随当前方案展示</text>
+
+  <rect x="70" y="301" width="404" height="125" rx="10" fill="#f6f8fb"/>
+  <text x="88" y="328" class="small muted">线路</text>
+  <text x="88" y="351" class="body bold">以接口返回为准</text>
+  <path d="M88 365H456" class="line"/>
+  <text x="88" y="389" class="small muted">报价 / 时效等结果</text>
+  <text x="88" y="412" class="body bold">以接口返回为准</text>
+
+  <rect x="70" y="446" width="404" height="48" rx="9" fill="#1769e8"/>
+  <text x="272" y="476" text-anchor="middle" class="white" font-size="16" font-weight="600">创建线索</text>
+  <text x="48" y="550" class="small muted">点击当前方案，调用 CRM 智能创建线索接口</text>
+  <path d="M48 571H496" class="line"/>
+  <text x="48" y="594" class="small muted">结果与右侧地图对应同一次查询</text>
+
+  <!-- Schematic map panel -->
+  <rect x="538" y="84" width="878" height="536" rx="15" fill="#eef3f2" stroke="#e3eaf3"/>
+  <g clip-path="url(#mapClip)">
+    <rect x="538" y="84" width="878" height="536" fill="url(#grid)"/>
+    <path d="M520 496C688 470 695 372 826 340S1079 252 1444 187M611 620C740 507 803 510 882 418S1146 313 1429 297M659 79C686 183 707 297 688 407S702 554 778 626M1028 73C1030 183 993 297 1085 398S1184 558 1190 625" fill="none" stroke="#fff" stroke-width="22"/>
+    <path d="M520 496C688 470 695 372 826 340S1079 252 1444 187M611 620C740 507 803 510 882 418S1146 313 1429 297M659 79C686 183 707 297 688 407S702 554 778 626M1028 73C1030 183 993 297 1085 398S1184 558 1190 625" fill="none" stroke="#dce5e6" stroke-width="2"/>
+    <path d="M641 531C741 479 790 416 874 370S1023 312 1084 245S1190 188 1305 148" fill="none" stroke="#1769e8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="641" cy="531" r="13" fill="#1dac70" stroke="#fff" stroke-width="4"/>
+    <circle cx="1305" cy="148" r="13" fill="#f58036" stroke="#fff" stroke-width="4"/>
+    <rect x="656" y="543" width="79" height="30" rx="7" fill="#fff" stroke="#dce5e9"/>
+    <text x="696" y="563" text-anchor="middle" class="small bold">起点</text>
+    <rect x="1211" y="169" width="79" height="30" rx="7" fill="#fff" stroke="#dce5e9"/>
+    <text x="1250" y="189" text-anchor="middle" class="small bold">终点</text>
+  </g>
+  <rect x="558" y="103" width="174" height="42" rx="9" fill="#fff" stroke="#e3eaf3"/>
+  <text x="575" y="129" class="section">路线地图</text>
+  <rect x="1178" y="571" width="215" height="28" rx="6" fill="#fff" opacity="0.95"/>
+  <text x="1285" y="590" text-anchor="middle" class="small muted">地图线路仅为布局示意</text>
+
+  <!-- Instructions and container parameters -->
+  <rect x="24" y="638" width="1392" height="238" rx="15" fill="#fff" stroke="#e3eaf3"/>
+  <text x="48" y="677" class="section">使用说明</text>
+  <text x="48" y="710" class="body">在销售秘书对话中说出起点和终点。</text>
+  <text x="48" y="738" class="body">可继续补充货品、重量和货箱。</text>
+  <text x="48" y="766" class="body">查看方案与地图，点击“创建线索”跟进。</text>
+  <text x="48" y="841" class="small muted">不提供查询条件表单；查询以自然语言完成。</text>
+  <path d="M446 658V856" class="line"/>
+
+  <text x="470" y="677" class="section">适用箱型参数</text>
+  <text x="1389" y="675" text-anchor="end" class="small muted">旧截图参数示意，正式数值待确认</text>
+  <rect x="470" y="697" width="922" height="35" rx="6" fill="#eef3fb"/>
+  <text x="489" y="720" class="small bold">箱型</text>
+  <text x="668" y="720" class="small bold">长 (mm)</text>
+  <text x="828" y="720" class="small bold">宽 (mm)</text>
+  <text x="984" y="720" class="small bold">高 (mm)</text>
+  <text x="1138" y="720" class="small bold">允许载重 (吨)</text>
+  <text x="1321" y="720" class="small bold">容积 (m³)</text>
+  <path d="M470 773H1392M470 814H1392" class="line"/>
+  <text x="489" y="760" class="body">40(77)</text>
+  <text x="668" y="760" class="body">12029</text>
+  <text x="828" y="760" class="body">2464</text>
+  <text x="984" y="760" class="body">2698</text>
+  <text x="1138" y="760" class="body">31</text>
+  <text x="1321" y="760" class="body">79</text>
+  <text x="489" y="801" class="body">45</text>
+  <text x="668" y="801" class="body">13556</text>
+  <text x="828" y="801" class="body">2464</text>
+  <text x="984" y="801" class="body">2698</text>
+  <text x="1138" y="801" class="body">29</text>
+  <text x="1321" y="801" class="body">90</text>
+  <text x="489" y="842" class="body">50</text>
+  <text x="668" y="842" class="body">15098</text>
+  <text x="828" y="842" class="body">2796</text>
+  <text x="984" y="842" class="body">2718</text>
+  <text x="1138" y="842" class="body">30</text>
+  <text x="1321" y="842" class="body">114</text>
+</svg>
